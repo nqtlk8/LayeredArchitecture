@@ -1,0 +1,29 @@
+name: Group Project CI
+
+on:
+  push:
+    # Chạy test khi member push code lên bất kỳ nhánh feature nào
+    branches: [ "feature", "feature/*" ]
+  pull_request:
+    # Chạy test khi có yêu cầu merge vào main
+    branches: [ "main" ]
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with: { python-version: '3.10' }
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+      - name: Run Backend Test
+        run: pytest backend/main.py
+
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run HTML Hint
+        run: npx htmlhint frontend/index.html
