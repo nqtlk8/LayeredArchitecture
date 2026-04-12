@@ -1,0 +1,46 @@
+name: Project CI Pipeline
+
+on:
+  push:
+    branches: [ "feature", "feature/*" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend # Trỏ mặc định vào thư mục backend
+    
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      
+      - name: Cài đặt thư viện Python
+        run: pip install -r requirements.txt
+      
+      - name: Chạy Pytest
+        run: pytest tests/ # Chỉ quét và chạy các file trong thư mục tests/
+
+  test-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend # Trỏ mặc định vào thư mục frontend
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Cài đặt thư viện Node (Jest)
+        run: npm install
+        
+      - name: Chạy Unit Test Frontend
+        run: npm test # Lệnh này tự động chạy Jest như đã khai báo trong package.json
