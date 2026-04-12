@@ -4,4 +4,4 @@ app = FastAPI()
 
 @app.get("/api/message")
 def read_message():
-    return {"message": "Hello from FastAPI Backend!"}
+    return {"message": "Hello from QT!"}

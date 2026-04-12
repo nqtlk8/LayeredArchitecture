@@ -12,4 +12,4 @@ def test_read_message():
     
     # Kiểm tra mã trạng thái (200 OK) và dữ liệu trả về
     assert response.status_code == 200
-    assert response.json() == {"message": "Hello from FastAPI Backend!"}
+    assert response.json() == {"message": "Hello from QT!"}
