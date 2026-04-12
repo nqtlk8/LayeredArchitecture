@@ -1,0 +1,25 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'backend/**' # Quan trọng: Chỉ trigger khi thư mục backend có thay đổi
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend # Trỏ máy ảo vào đúng thư mục backend
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Cài Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Cài thư viện & Chạy Test
+      run: |
+        pip install -r requirements.txt
+        pytest
