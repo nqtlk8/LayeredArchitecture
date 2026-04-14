@@ -1,15 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Frontend Demo</title>
-</head>
-<body>
-    <h1 id="title">Đang tải...</h1>
+<!doctype html>
+<html>
+  <head>
+    <title>Quản lý sinh viên</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 400px;
+        margin-bottom: 20px;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Tra cứu sinh viên</h1>
+    <input type="text" id="studentId" placeholder="Nhập ID sinh viên..." />
+    <button onclick="getStudentInfo()">Tìm</button>
+
+    <p id="error" style="color: red"></p>
+
+    <div id="studentInfo"></div>
+
+    <div id="subjectSection" style="display: none">
+      <h2>Danh sách môn học</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tên môn</th>
+          </tr>
+        </thead>
+        <tbody id="subjectTable"></tbody>
+      </table>
+    </div>
+
+    <div id="classSection" style="display: none">
+      <h2>Danh sách sinh viên cùng lớp</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tên sinh viên</th>
+            <th>Lớp</th>
+          </tr>
+        </thead>
+        <tbody id="classTable"></tbody>
+      </table>
+    </div>
+
     <script src="app.js"></script>
-    <script>
-        // Sử dụng hàm logic để hiển thị lên màn hình
-        document.getElementById("title").innerText = getGreetingMessage("Admin");
-    </script>
-</body>
+  </body>
 </html>

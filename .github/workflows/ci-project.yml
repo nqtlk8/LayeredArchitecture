@@ -30,8 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./frontend # Trỏ mặc định vào thư mục frontend
-
+        working-directory: ./frontend
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js
@@ -39,8 +38,10 @@ jobs:
         with:
           node-version: '20'
           
-      - name: Cài đặt thư viện Node (Jest)
-        run: npm install
+      - name: Cài đặt thư viện Node (Jest & JSDOM)
+        # Tích hợp lệnh cài đặt môi trường giả lập DOM như bạn vừa chạy local
+        run: npm install jest jest-environment-jsdom --save-dev
         
       - name: Chạy Unit Test Frontend
-        run: npm test # Lệnh này tự động chạy Jest như đã khai báo trong package.json
+        # Gọi trực tiếp jest với môi trường jsdom
+        run: npx jest tests/ --env=jsdom
