@@ -1,7 +1,15 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from backend.controllers.student_controller import router
 
 app = FastAPI()
 
-@app.get("/api/message")
-def read_message():
-    return {"message": "Hello from QT!"}
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(router)
