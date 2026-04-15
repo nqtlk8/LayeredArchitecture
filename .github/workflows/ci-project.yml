@@ -24,6 +24,9 @@ jobs:
         run: pip install -r requirements.txt
       # Thêm bước này để tạo Database trước khi test
       - name: Initialize Test Database
+        env:
+          # Báo cho Python biết thư mục hiện tại là gốc để tìm module
+          PYTHONPATH: . 
         run: python -m backend.database.init_db
       - name: Chạy Pytest
         run: pytest tests/ # Chỉ quét và chạy các file trong thư mục tests/
