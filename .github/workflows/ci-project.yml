@@ -22,7 +22,9 @@ jobs:
       
       - name: Cài đặt thư viện Python
         run: pip install -r requirements.txt
-      
+      # Thêm bước này để tạo Database trước khi test
+      - name: Initialize Test Database
+        run: python -m backend.database.init_db
       - name: Chạy Pytest
         run: pytest tests/ # Chỉ quét và chạy các file trong thư mục tests/
 
