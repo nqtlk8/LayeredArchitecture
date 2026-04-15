@@ -1,65 +1,69 @@
-import unittest
+import pytest
+import sys
+import os
+from fastapi.testclient import TestClient
+
+# Giúp Python tìm thấy module 'backend' từ thư mục gốc
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+
 from backend.repositories.impl.student_repository_impl import StudentRepositoryImpl
 from backend.services.student_service import StudentService
-from fastapi.testclient import TestClient
 from backend.main import app
 
 client = TestClient(app)
 
+# Sử dụng fixture để khởi tạo đối tượng (thay cho setUp trong Unittest)
+@pytest.fixture
+def student_resources():
+    repo = StudentRepositoryImpl()
+    service = StudentService()
+    return repo, service
 
-class TestBackend(unittest.TestCase):
+# =====================
+# REPOSITORY TEST
+# =====================
+def test_repo_get_student(student_resources):
+    repo, _ = student_resources
+    student = repo.get_student_by_id(1)
+    assert student is not None
+    assert student.name == "Trang"
 
-    def setUp(self):
-        self.repo = StudentRepositoryImpl()
-        self.service = StudentService()
+def test_repo_get_subjects(student_resources):
+    repo, _ = student_resources
+    subjects = repo.get_subjects_by_student(1)
+    assert len(subjects) > 0
 
-    # =====================
-    # REPOSITORY TEST
-    # =====================
-    def test_repo_get_student(self):
-        student = self.repo.get_student_by_id(1)
-        self.assertIsNotNone(student)
-        self.assertEqual(student.name, "Trang")
+def test_repo_get_class(student_resources):
+    repo, _ = student_resources
+    clazz = repo.get_class_by_student(1)
+    assert clazz is not None
 
-    def test_repo_get_subjects(self):
-        subjects = self.repo.get_subjects_by_student(1)
-        self.assertTrue(len(subjects) > 0)
+# =====================
+# SERVICE TEST
+# =====================
+def test_service_get_student(student_resources):
+    _, service = student_resources
+    result = service.get_student_info(1)
+    assert result is not None
+    assert "student" in result
+    assert "subjects" in result
 
-    def test_repo_get_class(self):
-        clazz = self.repo.get_class_by_student(1)
-        self.assertIsNotNone(clazz)
+def test_service_not_found(student_resources):
+    _, service = student_resources
+    result = service.get_student_info(999)
+    assert result is None
 
-    # =====================
-    # SERVICE TEST
-    # =====================
-    def test_service_get_student(self):
-        result = self.service.get_student_info(1)
+# =====================
+# CONTROLLER TEST
+# =====================
+def test_api_success():
+    response = client.get("/student/1")
+    assert response.status_code == 200
+    data = response.json()
+    assert "student" in data
+    assert "subjects" in data
+    assert "classmates" in data
 
-        self.assertIsNotNone(result)
-        self.assertIn("student", result)
-        self.assertIn("subjects", result)
-
-    def test_service_not_found(self):
-        result = self.service.get_student_info(999)
-        self.assertIsNone(result)
-
-    # =====================
-    # CONTROLLER TEST
-    # =====================
-    def test_api_success(self):
-        response = client.get("/student/1")
-
-        self.assertEqual(response.status_code, 200)
-        data = response.json()
-
-        self.assertIn("student", data)
-        self.assertIn("subjects", data)
-        self.assertIn("classmates", data)
-
-    def test_api_not_found(self):
-        response = client.get("/student/999")
-        self.assertEqual(response.status_code, 404)
-
-
-if __name__ == "__main__":
-    unittest.main()
+def test_api_not_found():
+    response = client.get("/student/999")
+    assert response.status_code == 404
